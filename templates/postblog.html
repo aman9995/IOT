@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<form method = 'POST', action = '/postblog'>
+{% csrf_token %}
+{% for message in messages %}
+<div class="alert alert-success" role="alert">
+    {{message}}
+</div>
+{% endfor %}
+<div class = "postform" >
+    <h2>Hello {{user.username}}</h2>
+    <h4>Post your blogs </h4>
+    <div class="form-floating">
+        <input class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" cols = '30' rows = '1' name = 'title'>
+        <label for="floatingTextarea2" >Title</label>
+    </div><br>
+    <div class="form-floating">
+        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 200px" name = 'body'></textarea>
+        <label for="floatingTextarea2" >Write your blog here</label>
+    </div><br>
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <input type="submit"  value="Post" class="btn btn-pill text-white btn-block btn-primary">
+    </div>
+</div>
+</form>
+
+{% endblock body %}

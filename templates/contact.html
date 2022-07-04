@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h2> Thanks {{message_name}} we received your message </h2>
+<main id="main">
+
+
+    <!-- ======= Contact Section ======= -->
+    <form action = "/contact" method = "POST" id = "myform">
+    <section class="contact" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
+      <div class="container">
+
+        <div class="row" style = "margin-top : 8rem; margin-bottom : 5rem;">
+
+          <div class="col-lg-6" style = >
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="info-box">
+                  {% comment %} <i class="bx bx-map"></i> {% endcomment %}
+                  <h3>Our Address</h3>
+                  <p>MANIT Bhopal, Madhya Pradesh</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-box">
+                  {% comment %} <i class="bx bx-envelope"></i> {% endcomment %}
+                  <h3>Email Us</h3>
+                  <p>amanpalsinghrana27@gmail.com<br>contact@example.com</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-box">
+                  {% comment %} <i class="bx bx-phone-call"></i> {% endcomment %}
+                  <h3>Call Us</h3>
+                  <p>7706059995<br>1234567898</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-lg-6">
+            <form action="/contact" method="post" role="form" class="php-email-form">
+                {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                </div>
+                <div class="col-md-6 form-group mt-3 mt-md-0">
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                </div>
+              </div>
+              <div class="form-group mt-3">
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+              </div>
+              <div class="form-group mt-3">
+                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+              </div><br>
+              {% comment %} <div class="text-center"><button type="submit" >Send Message</button></div> {% endcomment %}
+              <input type="submit"  value="Send Message" class="btn btn-pill text-white btn-block btn-primary">
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Contact Section -->
+  </form>
+
+
+    <script type = "text/javascript">
+        var values = {};
+        $.each($('#myForm').serializeArray(), function(i, field) {
+            values[field.name] = field.value;
+        });
+        for(let i = 0; i < values.length; i++){
+          console.log(values[i])
+        }
+        $.ajax({
+            type : "POST",
+            url : 'feed',
+            data : { csrfmiddlewaretoken : '{{csrf_token}}', name1 = name, email1 = email, subject1 = subject, message1 = message},
+            success: function callback(response){
+                alert(response)
+            }
+        })
+      }
+
+    </script>
+{% endblock body %}

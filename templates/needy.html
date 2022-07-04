@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+{% for message in messages %}
+<div class="alert alert-success" role="alert" style = "margin-top : 5rem">
+    {{message}}
+</div>
+{% endfor %}
+<div class = 'needydetails'style = "width : 1000px; height: 600px; margin : 50px 130px; margin-top : 8rem ; border : 1px solid #FFFFFF; overflow : auto">
+    <h3 style = "text-align : center; margin-top : 2rem"> Needy Details</h3>
+    {% for y in x  reversed %}
+    <div class="card" style="width: 50rem; ">
+        {% comment %} <img src="{% static 'img1.jpg' %}" class="card-img-top" alt="..."> {% endcomment %}
+        <div class="card-body">
+            <div class = 'first'>
+                <h5 >Name : {{y.name}}</h5>
+                <h5 style = "float : right;">Location : {{y.location}}</h5>
+            </div>
+            <div class = 'second'>
+                <h5 >City : {{y.city}}</h5>
+                <h5 style = "float : right;">State : {{y.state}}</h5>
+            </div>
+            <div class = 'third'>
+                <h5 >Pin : {{y.pin}}</h5>
+            </div>
+          <button style = " margin-left : auto; margin-right : auto" onclick="email('{{y.needy_id}}','{{y.status}}')" class="btn btn-primary" id = "one" >{{y.status}}</button>
+         
+        </div>
+</div>
+    {% endfor %}
+</div><br><br>
+<script type="text/javascript">
+    function solve(needy_id){
+        console.log(needy_id)
+        $.ajax({
+            type : "POST",
+            url : 'solve',
+            data : { csrfmiddlewaretoken : '{{csrf_token}}', id1:needy_id},
+            success: function callback(response){
+                alert(response)
+            }
+        })
+    }
+
+   function email(needy_id,status)
+   {
+       console.log(status)
+       $.ajax({
+           type:"POST",
+           url:'send',
+           data:{ csrfmiddlewaretoken :'{{csrf_token}}',id1:needy_id,status1:status},
+           success: function callback(response){
+               alert(response)
+           }
+       })
+   }
+
+   
+</script>
+{% endblock body %}
