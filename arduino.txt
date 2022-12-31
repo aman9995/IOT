@@ -1,0 +1,93 @@
+//#include <Wire.h> 
+//#include <LiquidCrystal_I2C.h>
+#define MOTORPIN 8
+//LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+const int trigPin = 12;
+const int echoPin = 13;
+const int buzz = 9;
+long duration;
+int distance;
+int percent;
+
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
+
+void setup() {
+  lcd.begin(16, 2);
+//  lcd.setCursor(0,0);
+//  lcd.print("WATER LEVEL ");
+//  lcd.setCursor(0,1);
+//  lcd.print("CONTROL SYSTEM  ");
+  lcd.setCursor(0,0);
+  lcd.print("Water Level ");
+  lcd.setCursor(0,1);
+  lcd.print("Control System ");
+  delay(2000);
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Starting ARDUINO, ");
+  delay(2000);
+  lcd.clear();
+  pinMode(trigPin, OUTPUT);
+  pinMode(trigPin, INPUT);
+  pinMode(buzz, OUTPUT);
+  pinMode(MOTORPIN, OUTPUT);
+  digitalWrite(MOTORPIN, LOW);
+  Serial.begin(9600);
+}
+
+void loop() {
+
+
+  if(Serial.available() > 0){
+    char data = Serial.read();
+    switch(data){
+      case '1' : digitalWrite(MOTORPIN, LOW); break;
+      case '0' : digitalWrite(MOTORPIN, HIGH); break;
+      case '3' : digitalWrite(buzz, HIGH); break;
+      case '4' : digitalWrite(buzz, LOW); break;
+      default : break;
+    }
+  }
+
+
+
+
+  
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+  percent=(100-(10*distance));
+
+//  Serial.print("Percent : ");
+  Serial.println(percent);
+//  Serial.println(distance);
+  lcd.setCursor(0,0);
+  lcd.print("WATER LEVEL:");
+  lcd.print(percent);
+  lcd.print("%  ");
+
+  if (distance <= 1){
+    lcd.setCursor(0, 1);
+    lcd.print("Tank Filled!");
+    digitalWrite(buzz, HIGH);
+    digitalWrite(MOTORPIN, HIGH);
+  }
+  else if(distance > 5 && distance < 17){
+//      lcd.setCursor(0, 1);
+//      lcd.print("Pump stopped");
+      digitalWrite(buzz, LOW);
+//    digitalWrite(MOTORPIN, LOW);
+  }
+  else if(distance >= 17){
+//    lcd.setCursor(0, 1);
+//    lcd.print("Pump is Running");
+    digitalWrite(MOTORPIN, LOW);
+  }
+}
